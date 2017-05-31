@@ -28,12 +28,15 @@ function calculateSalesTax(salesData, taxRates) {
   // Implement your code here
   let calculatedTaxedObjects = [];
 
+  //loop through array
   for (let i = 0; i < salesData.length; i++)
   {
     //Empty object that will re initialized everytime as a new object
     let calculatedCompany = {};
     let tempSalesTaxRate = 0.0;
+    let Notfound = true
 
+    //loop through each attribute of each element in the array
     for (let j in salesData[i])
     {
       if (j === "name")
@@ -49,7 +52,6 @@ function calculateSalesTax(salesData, taxRates) {
             tempSalesTaxRate = taxRates[tax];
 
         }
-        console.log(tempSalesTaxRate);
       }
 
       if (j === "sales")
@@ -60,19 +62,36 @@ function calculateSalesTax(salesData, taxRates) {
           sum += sale;
         }
         calculatedCompany["totalSales"] = sum;
-        calculatedCompany["TotalTaxes"] = sum * tempSalesTaxRate;
+        calculatedCompany["totalTaxes"] = sum * tempSalesTaxRate;
       }
     }
-    calculatedTaxedObjects.push(calculatedCompany);
+
+    //check if the object that just been created and made
+    //exists inside the array already, and if it does merge
+    //and discard
+    for (let k = 0; k < calculatedTaxedObjects.length; k++)
+    {
+      if (calculatedTaxedObjects[k]["name"] === calculatedCompany["name"])
+      {
+        Notfound = false;
+        calculatedTaxedObjects[k].totalSales += calculatedCompany.totalSales;
+        calculatedTaxedObjects[k].totalTaxes += calculatedCompany.totalTaxes;
+        k = calculatedTaxedObjects.length;
+      }
+    }
+    if (Notfound)
+      calculatedTaxedObjects.push(calculatedCompany);
   }
 
   // console.log("THE NEW ARRAY THATS GOING TO BE SEND");
 
+
   console.log(calculatedTaxedObjects);
+
 
 }
 
-console.log(companySalesData);
+//console.log(companySalesData);
 var results = calculateSalesTax(companySalesData, salesTaxRates);
 
 
