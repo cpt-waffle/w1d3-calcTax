@@ -26,21 +26,57 @@ var companySalesData = [
 
 function calculateSalesTax(salesData, taxRates) {
   // Implement your code here
-  var calculatedTaxedObjects = [];
+  let calculatedTaxedObjects = [];
 
   for (let i = 0; i < salesData.length; i++)
   {
-    console.log("-------------");
+    //Empty object that will re initialized everytime as a new object
+    let calculatedCompany = {};
+    let tempSalesTaxRate = 0.0;
+
     for (let j in salesData[i])
     {
-      console.log(j + "====>" + salesData[i][j]);
+      if (j === "name")
+        calculatedCompany[j] = salesData[i][j];
+
+      //Find the correct Tax rate
+      if (j === "province")
+      {
+        //loop through salesTaxRates
+        for (let tax in taxRates)
+        {
+          if (salesData[i][j] === tax)
+            tempSalesTaxRate = taxRates[tax];
+
+        }
+        console.log(tempSalesTaxRate);
+      }
+
+      if (j === "sales")
+      {
+        let sum = 0;
+        for (let sale of salesData[i][j])
+        {
+          sum += sale;
+        }
+        calculatedCompany["totalSales"] = sum;
+        calculatedCompany["TotalTaxes"] = sum * tempSalesTaxRate;
+      }
     }
+    calculatedTaxedObjects.push(calculatedCompany);
   }
+
+  // console.log("THE NEW ARRAY THATS GOING TO BE SEND");
+
+  console.log(calculatedTaxedObjects);
 
 }
 
 console.log(companySalesData);
 var results = calculateSalesTax(companySalesData, salesTaxRates);
+
+
+
 
 /* Expected Results:
 {
